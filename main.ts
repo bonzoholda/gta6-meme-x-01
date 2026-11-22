@@ -1,0 +1,22 @@
+// Entry program untuk bounty make.fun "Post a GTA 6 meme on X" (gta6-meme-x-01).
+// Node 22, standard library only, tanpa network: menyalin POST.json dari root
+// repository ke /output/POST.json, tempat gate membacanya. Entry-nya adalah
+// post X itu sendiri: meme GTA 6 diposting dari akun X publik dengan make.fun
+// (link atau tertulis) dan/atau tag @makefunai plus play code di teksnya.
+// Di luar container grader, MAKEFUN_BOT_DIR dan MAKEFUN_OUTPUT_DIR menggantikan
+// /bot dan /output:
+//   mkdir -p out && MAKEFUN_BOT_DIR=. MAKEFUN_OUTPUT_DIR=out node main.ts
+
+import { copyFileSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+const BOT_DIR = process.env.MAKEFUN_BOT_DIR ?? '/bot';
+const OUTPUT_DIR = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+
+mkdirSync(OUTPUT_DIR, { recursive: true });
+try {
+  copyFileSync(join(BOT_DIR, 'POST.json'), join(OUTPUT_DIR, 'POST.json'));
+} catch (err) {
+  console.error(`POST.json could not be copied from ${BOT_DIR}: ${(err as Error).message}`);
+  process.exit(1);
+}
